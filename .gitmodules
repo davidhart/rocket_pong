@@ -1,0 +1,3 @@
+[submodule "rocket"]
+	path = rocket
+	url = git@playfortblox.com:/home/git/rocket.git
