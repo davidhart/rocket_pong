@@ -5,6 +5,38 @@
 
 using namespace Rocket;
 
+struct Starfield_QuadVert
+{
+    Rocket::vec2 Pos;
+    Rocket::vec2 Uv;
+};
+
+void SetBufferUVs(Starfield_QuadVert* buffer, int count)
+{
+    for (int i = 0; i < count; ++i)
+    {
+        buffer[i * 4 + 0].Uv = vec2(0, 0);
+        buffer[i * 4 + 1].Uv = vec2(1, 0);
+        buffer[i * 4 + 2].Uv = vec2(1, 1);
+        buffer[i * 4 + 3].Uv = vec2(0, 1);
+    }
+}
+
+void SetBufferVerts(Starfield_QuadVert* buffer, Starfield_Star* stars, int count)
+{
+    const float pointSize = 0.01f;
+
+    for (int i = 0; i < count; ++i)
+    {
+        vec2 pos = stars[i].Pos;
+
+        buffer[i * 4 + 0].Pos = pos + vec2(-pointSize, -pointSize);
+        buffer[i * 4 + 1].Pos = pos + vec2(pointSize, -pointSize);
+        buffer[i * 4 + 2].Pos = pos + vec2(pointSize, pointSize);
+        buffer[i * 4 + 3].Pos = pos + vec2(-pointSize, pointSize);
+    }
+}
+
 Shader* CreateShader(Renderer* renderer)
 {
     char vertSource[] =
@@ -43,7 +75,6 @@ Starfield::Starfield() :
 void Starfield::Init(Renderer* renderer, int numStars)
 {
     m_stars.resize(numStars);
-    m_verts.resize(numStars * 4);
     m_vertbuffer = renderer->CreateBuffer(numStars * sizeof(Starfield_QuadVert) * 4, nullptr);
 
     std::uniform_real_distribution<float> normalDistrib(0.0f, 1.0f);
@@ -55,14 +86,10 @@ void Starfield::Init(Renderer* renderer, int numStars)
         m_stars[i].Pos = m_stars[i].Direction * m_stars[i].Lifetime;
     }
 
-    for (int i = 0; i < numStars; ++i)
-    {
-        m_verts[i * 4 + 0].Uv = vec2(0, 0);
-        m_verts[i * 4 + 1].Uv = vec2(1, 0);
-        m_verts[i * 4 + 2].Uv = vec2(1, 1);
-        m_verts[i * 4 + 3].Uv = vec2(0, 1);
-    }
-    UpdateBuffer();
+    Starfield_QuadVert* buffer = reinterpret_cast<Starfield_QuadVert*>(m_vertbuffer->Map(Buffer::MAP_WRITE_ONLY));
+    SetBufferUVs(buffer, (int)m_stars.size());
+    SetBufferVerts(buffer, m_stars.data(), (int)m_stars.size());
+    m_vertbuffer->Unmap();
 
     // Create fixed list of quad indices
     std::vector<short> indices(numStars * 6);
@@ -138,7 +165,9 @@ void Starfield::Update(float dt)
     }
 
     // Update the mesh
-    UpdateBuffer();
+    Starfield_QuadVert* buffer = reinterpret_cast<Starfield_QuadVert*>(m_vertbuffer->Map(Buffer::MAP_WRITE_ONLY));
+    SetBufferVerts(buffer, m_stars.data(), (int)m_stars.size());
+    m_vertbuffer->Unmap();
 }
 
 DrawBinding* Starfield::GetDrawBinding()
@@ -149,26 +178,6 @@ DrawBinding* Starfield::GetDrawBinding()
 Material* Starfield::GetMaterial()
 {
     return m_material;
-}
-
-void Starfield::UpdateBuffer()
-{
-    const float pointSize = 0.01f;
-
-    for (size_t i = 0; i < m_stars.size(); ++i)
-    {
-        vec2 pos = m_stars[i].Pos;
-
-        m_verts[i * 4 + 0].Pos = pos + vec2(-pointSize, -pointSize);
-        m_verts[i * 4 + 1].Pos = pos + vec2(pointSize, -pointSize);
-        m_verts[i * 4 + 2].Pos = pos + vec2(pointSize, pointSize);
-        m_verts[i * 4 + 3].Pos = pos + vec2(-pointSize, pointSize);
-    }
-
-    //void* data = m_vertbuffer->Map(Buffer::MAP_WRITE_ONLY);
-    //memcpy(data, m_verts.data(), m_verts.size() * sizeof(Starfield_QuadVert));
-    //m_vertbuffer->Unmap();
-    m_vertbuffer->UpdateData(m_verts.data(), m_verts.size() * sizeof(Starfield_QuadVert));
 }
 
 vec2 Starfield::PickRandomDirection()

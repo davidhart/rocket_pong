@@ -8,12 +8,6 @@
 #include <vector>
 #include <random>
 
-struct Starfield_QuadVert
-{
-    Rocket::vec2 Pos;
-    Rocket::vec2 Uv;
-};
-
 struct Starfield_Star
 {
     float Lifetime;
@@ -35,8 +29,6 @@ public:
     Rocket::Material* GetMaterial();
     
 private:
-
-    void UpdateBuffer();
     Rocket::vec2 PickRandomDirection();
 
     Rocket::Buffer* m_vertbuffer;
@@ -46,7 +38,6 @@ private:
     Rocket::Material* m_material;
     
     std::vector<Starfield_Star> m_stars;
-    std::vector<Starfield_QuadVert> m_verts;
     std::mt19937 m_randGenerator;
 };
 
