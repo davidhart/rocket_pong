@@ -11,16 +11,12 @@
 class PongGame : public Rocket::Game
 {
 public:
-    PongGame();
-    virtual ~PongGame();
-
-    void InitGraphics(Rocket::Renderer* renderer);
-    void InitView(Rocket::GameView* view);
+    virtual void Startup(Rocket::GameServices* services);
+    virtual void Shutdown(Rocket::GameServices* services);
 
     void Update(float dt);
 
 private:
-    Rocket::Renderer* m_renderer;
     Starfield m_starfield;
     Rocket::RenderQueue* m_mainQueue;
 };

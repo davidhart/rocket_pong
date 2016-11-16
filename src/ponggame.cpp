@@ -4,21 +4,10 @@
 
 using namespace Rocket;
 
-PongGame::PongGame() :
-    m_renderer(nullptr)
+void PongGame::Startup(Rocket::GameServices* services)
 {
+    Renderer* renderer = services->Renderer();
 
-}
-PongGame::~PongGame()
-{
-    m_starfield.Release(m_renderer);
-
-    m_renderer->ReleaseRenderQueue(m_mainQueue);
-}
-
-void PongGame::InitGraphics(Rocket::Renderer* renderer)
-{
-    m_renderer = renderer;
     m_starfield.Init(renderer, 80);
 
     m_mainQueue = renderer->CreateRenderQueue("main", 0);
@@ -26,9 +15,12 @@ void PongGame::InitGraphics(Rocket::Renderer* renderer)
     m_mainQueue->SetClearDepthEnabled(true);
 }
 
-void PongGame::InitView(Rocket::GameView* view)
+void PongGame::Shutdown(Rocket::GameServices* services)
 {
-
+    Renderer* renderer = services->Renderer();
+    
+    m_starfield.Release(renderer);
+    renderer->ReleaseRenderQueue(m_mainQueue);
 }
 
 void PongGame::Update(float dt)
