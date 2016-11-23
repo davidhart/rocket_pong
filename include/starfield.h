@@ -20,7 +20,9 @@ class Starfield
 public:
     Starfield();
 
-    void Init(Rocket::Renderer* renderer, int numStars);
+    void Init(Rocket::Renderer* renderer, int numStars, float aspectRatio);
+    void SetAspectRatio(float aspectRatio);
+
     void Release(Rocket::Renderer* renderer);
 
     void Update(float dt);

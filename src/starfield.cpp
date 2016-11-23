@@ -2,12 +2,15 @@
 #include "drawbinding.h"
 #include "buffer.h"
 #include "shader.h"
+#include "rendertarget.h"
+
+const float DistanceScale = 2.0f;
 
 using namespace Rocket;
 
 struct Starfield_QuadVert
 {
-    Rocket::vec2 Pos;
+    Rocket::vec3 Pos_Lifetime;
     Rocket::vec2 Uv;
 };
 
@@ -28,12 +31,12 @@ void SetBufferVerts(Starfield_QuadVert* buffer, Starfield_Star* stars, int count
 
     for (int i = 0; i < count; ++i)
     {
-        vec2 pos = stars[i].Pos;
+        vec3 pos = vec3(stars[i].Pos.x, stars[i].Pos.y, stars[i].Lifetime);
 
-        buffer[i * 4 + 0].Pos = pos + vec2(-pointSize, -pointSize);
-        buffer[i * 4 + 1].Pos = pos + vec2(pointSize, -pointSize);
-        buffer[i * 4 + 2].Pos = pos + vec2(pointSize, pointSize);
-        buffer[i * 4 + 3].Pos = pos + vec2(-pointSize, pointSize);
+        buffer[i * 4 + 0].Pos_Lifetime = pos + vec3(-pointSize, -pointSize, 0);
+        buffer[i * 4 + 1].Pos_Lifetime = pos + vec3(pointSize, -pointSize, 0);
+        buffer[i * 4 + 2].Pos_Lifetime = pos + vec3(pointSize, pointSize, 0);
+        buffer[i * 4 + 3].Pos_Lifetime = pos + vec3(-pointSize, pointSize, 0);
     }
 }
 
@@ -42,19 +45,24 @@ Shader* CreateShader(Renderer* renderer)
     char vertSource[] =
         "#version 140\n"
         "#extension GL_ARB_explicit_attrib_location : enable\n"
-        "layout(location=0)in vec2 i_pos;\n"
+        "uniform mat4 u_proj;\n"
+        "layout(location=0)in vec3 i_posxy_lifetime;\n"
         "layout(location=1)in vec2 i_uv;\n"
+        "out float v_lifetime;\n"
         "void main() {\n"
-        "gl_Position = vec4(i_pos.x, i_pos.y, 0.0, 1.0);\n"
+        "gl_Position = u_proj * vec4(i_posxy_lifetime.x, i_posxy_lifetime.y, 0.0, 1.0);\n"
+        "v_lifetime = i_posxy_lifetime.z;\n"
         "}\n";
 
     char fragSource[] =
         "#version 140\n"
         "#extension GL_ARB_explicit_attrib_location : enable\n"
+        "in float v_lifetime;\n"
         "out vec4 f_frag;\n"
         "layout(location = 0) out vec4 frag; \n"
         "void main() {\n"
-        "frag = vec4(1,1,1,1);\n"
+        "float a = smoothstep(0.1, 0.5, v_lifetime) * 1 - smoothstep(0.75, 1, v_lifetime);\n"
+        "frag = vec4(a,a,a,a);\n"
         "}\n";
     
     ShaderDef shaderDef;
@@ -72,7 +80,7 @@ Starfield::Starfield() :
 {
 }
 
-void Starfield::Init(Renderer* renderer, int numStars)
+void Starfield::Init(Renderer* renderer, int numStars, float aspectRatio)
 {
     m_stars.resize(numStars);
     m_vertbuffer = renderer->CreateBuffer(numStars * sizeof(Starfield_QuadVert) * 4, nullptr);
@@ -83,7 +91,7 @@ void Starfield::Init(Renderer* renderer, int numStars)
     {
         m_stars[i].Lifetime = normalDistrib(m_randGenerator);
         m_stars[i].Direction = PickRandomDirection();
-        m_stars[i].Pos = m_stars[i].Direction * m_stars[i].Lifetime;
+        m_stars[i].Pos = m_stars[i].Direction * m_stars[i].Lifetime * DistanceScale;
     }
 
     Starfield_QuadVert* buffer = reinterpret_cast<Starfield_QuadVert*>(m_vertbuffer->Map(Buffer::MAP_WRITE_ONLY));
@@ -118,7 +126,7 @@ void Starfield::Init(Renderer* renderer, int numStars)
     VertexBinding vertexBinding[2] = 
     {
         {
-            0, VB_TYPE_FLOAT, DB_COMPONENTS_2, m_vertbuffer, 0, sizeof(Starfield_QuadVert)
+            0, VB_TYPE_FLOAT, DB_COMPONENTS_3, m_vertbuffer, 0, sizeof(Starfield_QuadVert)
         },
         {
             1, VB_TYPE_FLOAT, DB_COMPONENTS_2, m_vertbuffer, sizeof(float)*2, sizeof(Starfield_QuadVert)
@@ -135,6 +143,15 @@ void Starfield::Init(Renderer* renderer, int numStars)
 
     m_shader = CreateShader(renderer);
     m_material = new Material(m_shader);
+
+    ivec2 size = renderer->GetPrimaryRenderTarget()->GetSize();
+    
+    SetAspectRatio(aspectRatio);
+}
+
+void Starfield::SetAspectRatio(float aspectRatio)
+{
+    m_material->GetParameters()->SetMat4("u_proj", mat4::Ortho(-(float)aspectRatio, (float)aspectRatio, -1, 1, -1, 1));
 }
 
 void Starfield::Release(Renderer* renderer)
@@ -161,7 +178,7 @@ void Starfield::Update(float dt)
         }
 
         m_stars[i].Lifetime = life;
-        m_stars[i].Pos = m_stars[i].Direction * life;
+        m_stars[i].Pos = m_stars[i].Direction * life * DistanceScale;
     }
 
     // Update the mesh
