@@ -1,6 +1,6 @@
 #pragma once
-#ifndef PONGGAME_STARFIELD_DEFINED
-#define PONGAGME_STARFIELD_DEFINED
+#ifndef PONGGAME_STARFIELD_INCLUDED
+#define PONGAGME_STARFIELD_INCLUDED
 
 #include "renderer.h"
 #include "vectormath.h"
@@ -20,8 +20,8 @@ class Starfield
 public:
     Starfield();
 
-    void Init(Rocket::Renderer* renderer, int numStars, float aspectRatio);
-    void SetAspectRatio(float aspectRatio);
+    void Init(Rocket::Renderer* renderer, int numStars, const Rocket::mat4& projection);
+    void SetProjection(const Rocket::mat4& projection);
 
     void Release(Rocket::Renderer* renderer);
 

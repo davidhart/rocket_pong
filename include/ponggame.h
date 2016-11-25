@@ -7,7 +7,7 @@
 #include "renderer.h"
 
 #include "starfield.h"
-#include "paddle.h"
+#include "paddlecontroller.h"
 
 class PongGame : public Rocket::Game, public Rocket::IGameViewSizeObserver
 {
@@ -20,12 +20,9 @@ public:
     virtual void GameViewResized(const Rocket::ivec2& size);
 
 private:
-    static const int NumPlayers = 1;
-
+    
     Starfield m_starfield;
-    Paddle m_paddles[NumPlayers];
-
-    Rocket::Shader* m_paddleShader;
+    PaddleController m_paddleController;
 
     Rocket::RenderQueue* m_mainQueue;
 };

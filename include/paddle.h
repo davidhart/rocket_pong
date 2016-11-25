@@ -2,27 +2,41 @@
 #ifndef PONGGAME_PADDLE_INCLUDED
 #define PONGGAME_PADDLE_INCLUDED
 
-#include "renderer.h"
-#include "material.h"
+#include "vectormath.h"
+
+namespace Rocket
+{
+    class DrawBinding;
+    class Material;
+    class Shader;
+    class ShaderParameters;
+}
+
+class PaddleGeometry;
 
 class Paddle
 {
 public:
     Paddle();
-    void Init(Rocket::Renderer* renderer, Rocket::Shader* shader, float arcAngle, int arcDivisions, int capDivisions, float aspect);
-    void Release(Rocket::Renderer* renderer);
 
-    void SetAspectRatio(float aspectRatio);
+    void Init(Rocket::Shader* shader, PaddleGeometry* geometry, const Rocket::mat4& projection);
+    void Release();
+    void Update(float dt);
+    
+    void SetRotation(float rotation);
+    void SetProjection(const Rocket::mat4& projection);
 
-    Rocket::Material* GetMaterial();
     Rocket::DrawBinding* GetDrawBinding();
+    Rocket::Material* GetMaterial();
+
 
 private:
 
-    Rocket::Buffer* m_vertbuffer;
-    Rocket::Buffer* m_indexbuffer;
+    float m_rotation;
+
+    PaddleGeometry* m_geometry;
     Rocket::Material* m_material;
-    Rocket::DrawBinding* m_drawBinding;
+    Rocket::ShaderParameters* m_parameters;
 };
 
 #endif

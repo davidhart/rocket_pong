@@ -80,7 +80,7 @@ Starfield::Starfield() :
 {
 }
 
-void Starfield::Init(Renderer* renderer, int numStars, float aspectRatio)
+void Starfield::Init(Renderer* renderer, int numStars, const mat4& projection)
 {
     m_stars.resize(numStars);
     m_vertbuffer = renderer->CreateBuffer(numStars * sizeof(Starfield_QuadVert) * 4, nullptr);
@@ -146,12 +146,12 @@ void Starfield::Init(Renderer* renderer, int numStars, float aspectRatio)
 
     ivec2 size = renderer->GetPrimaryRenderTarget()->GetSize();
     
-    SetAspectRatio(aspectRatio);
+    SetProjection(projection);
 }
 
-void Starfield::SetAspectRatio(float aspectRatio)
+void Starfield::SetProjection(const mat4& projection)
 {
-    m_material->GetParameters()->SetMat4("u_proj", mat4::Ortho(-(float)aspectRatio, (float)aspectRatio, -1, 1, -1, 1));
+    m_material->GetParameters()->SetMat4("u_proj", projection);
 }
 
 void Starfield::Release(Renderer* renderer)
