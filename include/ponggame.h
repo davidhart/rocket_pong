@@ -8,6 +8,7 @@
 
 #include "starfield.h"
 #include "paddlecontroller.h"
+#include "ballcontroller.h"
 
 class PongGame : public Rocket::Game, public Rocket::IGameViewSizeObserver
 {
@@ -23,6 +24,7 @@ private:
     
     Starfield m_starfield;
     PaddleController m_paddleController;
+    BallController m_ballController;
 
     Rocket::RenderQueue* m_mainQueue;
 };

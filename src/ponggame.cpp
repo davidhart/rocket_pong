@@ -33,6 +33,7 @@ void PongGame::Startup(GameServices* services)
 
     m_starfield.Init(renderer, 80, projection);
     m_paddleController.Init(services, projection);
+    m_ballController.Init(renderer, projection);
 
     m_mainQueue = renderer->CreateRenderQueue("main", 0);
     m_mainQueue->SetClearColorEnabled(true);
@@ -53,9 +54,11 @@ void PongGame::Update(float dt)
 {
     m_starfield.Update(dt);
     m_paddleController.Update(dt);
+    m_ballController.Update(dt);
 
     m_mainQueue->Draw(m_starfield.GetDrawBinding(), m_starfield.GetMaterial());
     m_paddleController.Draw(m_mainQueue);
+    m_ballController.Draw(m_mainQueue);
 }
 
 void PongGame::GameViewResized(const ivec2& size)
@@ -64,4 +67,5 @@ void PongGame::GameViewResized(const ivec2& size)
 
     m_starfield.SetProjection(projection);
     m_paddleController.SetProjection(projection);
+    m_ballController.SetProjection(projection);
 }
