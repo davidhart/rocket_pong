@@ -143,8 +143,6 @@ void Starfield::Init(Renderer* renderer, int numStars, const mat4& projection)
 
     m_shader = CreateShader(renderer);
     m_material = new Material(m_shader);
-
-    ivec2 size = renderer->GetPrimaryRenderTarget()->GetSize();
     
     SetProjection(projection);
 }
