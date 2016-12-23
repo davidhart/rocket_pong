@@ -10,18 +10,13 @@ Paddle::Paddle() :
 {
 }
 
-void Paddle::Init(Rocket::Shader* shader, PaddleGeometry* geometry, const mat4& projection)
+void Paddle::Init(PaddleGeometry* geometry, Material* material, const mat4& projection)
 {
-    m_material = new Material(shader);
+    m_material = material;
     m_parameters = m_material->GetParameters();
     m_geometry = geometry;
     
     SetProjection(projection);
-}
-
-void Paddle::Release()
-{
-    delete m_material;
 }
 
 void Paddle::Update(float dt)

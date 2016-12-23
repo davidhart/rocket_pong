@@ -53,7 +53,9 @@ void BallController::Init(Renderer *renderer, const mat4& projection)
     
     for (int i = 0; i < NumBalls; ++i)
     {
-        m_balls[i].Init(&m_ballGeometry, m_ballshader, projection);
+        Material* material = renderer->CreateMaterial(m_ballshader);
+        
+        m_balls[i].Init(&m_ballGeometry, material, projection);
     }
 }
 
@@ -61,7 +63,7 @@ void BallController::Release(Renderer* renderer)
 {
     for (int i = 0; i < NumBalls; ++i)
     {
-        m_balls[i].Release();
+        renderer->ReleaseMaterial(m_balls[i].GetMaterial());
     }
     
     m_ballGeometry.Release(renderer);

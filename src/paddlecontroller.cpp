@@ -51,7 +51,8 @@ void PaddleController::Init(GameServices* services, const mat4& projection)
 
     for (int i = 0; i < NumPlayers; ++i)
     {
-        m_paddle[i].Init(m_shader, &m_geometry, projection);
+        Material* material = renderer->CreateMaterial(m_shader);
+        m_paddle[i].Init(&m_geometry, material, projection);
     }
 
     for (int i = 1; i < NumPlayers; ++i)
@@ -66,7 +67,7 @@ void PaddleController::Release(GameServices* services)
 
     for (int i = 0; i < NumPlayers; ++i)
     {
-        m_paddle[i].Release();
+        renderer->ReleaseMaterial(m_paddle[i].GetMaterial());
     }
 
     m_geometry.Release(renderer);

@@ -19,8 +19,7 @@ class Paddle
 public:
     Paddle();
 
-    void Init(Rocket::Shader* shader, PaddleGeometry* geometry, const Rocket::mat4& projection);
-    void Release();
+    void Init(PaddleGeometry* geometry, Rocket::Material* material, const Rocket::mat4& projection);
     void Update(float dt);
     
     void SetRotation(float rotation);

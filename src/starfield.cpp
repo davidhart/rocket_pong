@@ -142,7 +142,7 @@ void Starfield::Init(Renderer* renderer, int numStars, const mat4& projection)
     m_drawBinding = renderer->CreateDrawBinding(drawBindingDef);
 
     m_shader = CreateShader(renderer);
-    m_material = new Material(m_shader);
+    m_material = renderer->CreateMaterial(m_shader);
     
     SetProjection(projection);
 }
@@ -154,7 +154,7 @@ void Starfield::SetProjection(const mat4& projection)
 
 void Starfield::Release(Renderer* renderer)
 {
-    delete m_material;
+    renderer->ReleaseMaterial(m_material);
     renderer->ReleaseShader(m_shader);
     renderer->ReleaseDrawBinding(m_drawBinding);
     renderer->ReleaseBuffer(m_vertbuffer);

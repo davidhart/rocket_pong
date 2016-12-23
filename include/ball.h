@@ -16,8 +16,7 @@ class BallGeometry;
 class Ball
 {
 public:
-    void Init(BallGeometry* geometry, Rocket::Shader* shader, const Rocket::mat4& projection);
-    void Release();
+    void Init(BallGeometry* geometry, Rocket::Material* material, const Rocket::mat4& projection);
     void SetPosition(const Rocket::vec2& position);
     void SetProjection(const Rocket::mat4& projection);
     void Update(float dt);

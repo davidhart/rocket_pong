@@ -5,17 +5,12 @@
 
 using namespace Rocket;
 
-void Ball::Init(BallGeometry *geometry, Shader *shader, const mat4& projection)
+void Ball::Init(BallGeometry *geometry, Material* material, const mat4& projection)
 {
     m_geometry = geometry;
-    m_material = new Material(shader);
+    m_material = material;
     
     SetProjection(projection);
-}
-
-void Ball::Release()
-{
-    delete m_material;
 }
 
 void Ball::SetProjection(const mat4& projection)
