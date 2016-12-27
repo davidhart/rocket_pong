@@ -20,8 +20,7 @@ class Starfield
 public:
     Starfield();
 
-    void Init(Rocket::Renderer* renderer, int numStars, const Rocket::mat4& projection);
-    void SetProjection(const Rocket::mat4& projection);
+    void Init(Rocket::Renderer* renderer, int numStars);
 
     void Release(Rocket::Renderer* renderer);
 

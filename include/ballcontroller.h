@@ -2,7 +2,6 @@
 #ifndef PONGGAME_BALLCONTROLLER_INCLUDED
 #define PONGGAME_BALLCONTROLLER_INCLUDED
 
-#include "vectormath.h"
 #include "ball.h"
 #include "ballgeometry.h"
 
@@ -17,9 +16,8 @@ class BallController
 {
 public:
     BallController();
-    void Init(Rocket::Renderer* renderer, const Rocket::mat4& projection);
+    void Init(Rocket::Renderer* renderer);
     void Release(Rocket::Renderer* renderer);
-    void SetProjection(const Rocket::mat4& projection);
     
     void Update(float dt);
     void Draw(Rocket::RenderQueue* queue);

@@ -8,12 +8,10 @@ Paddle::Paddle() :
 {
 }
 
-void Paddle::Init(PaddleGeometry* geometry, Material* material, const mat4& projection)
+void Paddle::Init(PaddleGeometry* geometry, Material* material)
 {
     m_material = material;
     m_geometry = geometry;
-    
-    SetProjection(projection);
 }
 
 void Paddle::Update(float dt)
@@ -25,11 +23,6 @@ void Paddle::Update(float dt)
 void Paddle::SetRotation(const float rotation)
 {
     m_rotation = rotation;
-}
-
-void Paddle::SetProjection(const mat4& projection)
-{
-    m_material->SetMat4("u_proj", projection);
 }
 
 DrawBinding* Paddle::GetDrawBinding()

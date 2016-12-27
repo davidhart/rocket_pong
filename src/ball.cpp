@@ -4,17 +4,10 @@
 
 using namespace Rocket;
 
-void Ball::Init(BallGeometry *geometry, Material* material, const mat4& projection)
+void Ball::Init(BallGeometry *geometry, Material* material)
 {
     m_geometry = geometry;
     m_material = material;
-    
-    SetProjection(projection);
-}
-
-void Ball::SetProjection(const mat4& projection)
-{
-    m_material->SetMat4("u_proj", projection);
 }
 
 void Ball::SetPosition(const vec2& position)

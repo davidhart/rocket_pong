@@ -20,11 +20,10 @@ class Paddle
 public:
     Paddle();
 
-    void Init(PaddleGeometry* geometry, Rocket::Material* material, const Rocket::mat4& projection);
+    void Init(PaddleGeometry* geometry, Rocket::Material* material);
     void Update(float dt);
     
     void SetRotation(float rotation);
-    void SetProjection(const Rocket::mat4& projection);
 
     Rocket::DrawBinding* GetDrawBinding();
     Rocket::Material* GetMaterial();

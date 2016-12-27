@@ -80,7 +80,7 @@ Starfield::Starfield() :
 {
 }
 
-void Starfield::Init(Renderer* renderer, int numStars, const mat4& projection)
+void Starfield::Init(Renderer* renderer, int numStars)
 {
     m_stars.resize(numStars);
     m_vertbuffer = renderer->CreateBuffer(numStars * sizeof(Starfield_QuadVert) * 4, nullptr);
@@ -143,13 +143,6 @@ void Starfield::Init(Renderer* renderer, int numStars, const mat4& projection)
 
     m_shader = CreateShader(renderer);
     m_material = renderer->CreateMaterial(m_shader);
-    
-    SetProjection(projection);
-}
-
-void Starfield::SetProjection(const mat4& projection)
-{
-    m_material->SetMat4("u_proj", projection);
 }
 
 void Starfield::Release(Renderer* renderer)

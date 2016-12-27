@@ -26,6 +26,7 @@ private:
     PaddleController m_paddleController;
     BallController m_ballController;
 
+    Rocket::Renderer* m_renderer;
     Rocket::RenderQueue* m_mainQueue;
 };
 

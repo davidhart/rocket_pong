@@ -2,7 +2,6 @@
 #ifndef PONGGAME_PADDLECONTROLLER_INCLUDED
 #define PONGGAME_PADDLECONTROLLER_INCLUDED
 
-#include "vectormath.h"
 #include "paddle.h"
 #include "paddlegeometry.h"
 
@@ -17,10 +16,8 @@ class PaddleController
 {
 public:
 
-    void Init(Rocket::GameServices* services, const Rocket::mat4& projection);
+    void Init(Rocket::GameServices* services);
     void Release(Rocket::GameServices* services);
-
-    void SetProjection(const Rocket::mat4& projection);
 
     void Draw(Rocket::RenderQueue* queue);
     void Update(float dt);
