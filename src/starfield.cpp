@@ -149,7 +149,7 @@ void Starfield::Init(Renderer* renderer, int numStars, const mat4& projection)
 
 void Starfield::SetProjection(const mat4& projection)
 {
-    m_material->GetParameters()->SetMat4("u_proj", projection);
+    m_material->SetMat4("u_proj", projection);
 }
 
 void Starfield::Release(Renderer* renderer)

@@ -1,7 +1,6 @@
 #include "ball.h"
 #include "ballgeometry.h"
 #include "material.h"
-#include "shader.h"
 
 using namespace Rocket;
 
@@ -15,7 +14,7 @@ void Ball::Init(BallGeometry *geometry, Material* material, const mat4& projecti
 
 void Ball::SetProjection(const mat4& projection)
 {
-    m_material->GetParameters()->SetMat4("u_proj", projection);
+    m_material->SetMat4("u_proj", projection);
 }
 
 void Ball::SetPosition(const vec2& position)
@@ -25,7 +24,7 @@ void Ball::SetPosition(const vec2& position)
 
 void Ball::Update(float dt)
 {
-    m_material->GetParameters()->SetMat4("u_model", mat4::Translate(m_position));
+    m_material->SetMat4("u_model", mat4::Translate(m_position));
 }
 
 DrawBinding* Ball::GetDrawBinding()

@@ -3,6 +3,7 @@
 #define PONGGAME_PADDLE_INCLUDED
 
 #include "vectormath.h"
+#include "material.h"
 
 namespace Rocket
 {
@@ -35,7 +36,6 @@ private:
 
     PaddleGeometry* m_geometry;
     Rocket::Material* m_material;
-    Rocket::ShaderParameters* m_parameters;
 };
 
 #endif
