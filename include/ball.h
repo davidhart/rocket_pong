@@ -9,6 +9,7 @@ namespace Rocket
     class Shader;
     class Material;
     class DrawBinding;
+    class Renderer;
 }
 
 class BallGeometry;
@@ -16,7 +17,7 @@ class BallGeometry;
 class Ball
 {
 public:
-    void Init(BallGeometry* geometry, Rocket::Material* material);
+    void Init(BallGeometry* geometry, Rocket::Material* material, Rocket::Renderer* renderer);
     void SetPosition(const Rocket::vec2& position);
     void Update(float dt);
     
@@ -24,6 +25,11 @@ public:
     Rocket::Material* GetMaterial();
     
 private:
+    struct
+    {
+        int Model;
+    } m_properties;
+    
     Rocket::vec3 m_position;
     
     BallGeometry* m_geometry;

@@ -22,6 +22,11 @@ public:
 
 private:
     
+    struct
+    {
+        int Projection;
+    } m_properties;
+    
     Starfield m_starfield;
     PaddleController m_paddleController;
     BallController m_ballController;

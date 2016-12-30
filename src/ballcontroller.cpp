@@ -55,7 +55,7 @@ void BallController::Init(Renderer *renderer)
     {
         Material* material = renderer->CreateMaterial(m_ballshader);
         
-        m_balls[i].Init(&m_ballGeometry, material);
+        m_balls[i].Init(&m_ballGeometry, material, renderer);
     }
 }
 

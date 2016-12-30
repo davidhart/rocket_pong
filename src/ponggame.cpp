@@ -27,12 +27,12 @@ void PongGame::Startup(GameServices* services)
     view->AddSizeObserver(this);
 
     Renderer* renderer = services->Renderer();
+    m_properties.Projection = renderer->GetShaderPropertyID("u_proj");
     m_renderer = renderer;
+    
     ivec2 rtSize = renderer->GetPrimaryRenderTarget()->GetSize();
-
-    mat4 projection = CalculateProjection(rtSize);
-
-    renderer->SetGlobalMat4("u_proj", projection);
+    
+    renderer->SetShaderMat4(m_properties.Projection, CalculateProjection(rtSize));
     
     m_starfield.Init(renderer, 80);
     m_paddleController.Init(services);
@@ -66,7 +66,5 @@ void PongGame::Update(float dt)
 
 void PongGame::GameViewResized(const ivec2& size)
 {
-    mat4 projection = CalculateProjection(size);
-
-    m_renderer->SetGlobalMat4("u_proj", projection);
+    m_renderer->SetShaderMat4(m_properties.Projection, CalculateProjection(size));
 }

@@ -11,6 +11,7 @@ namespace Rocket
     class Material;
     class Shader;
     class ShaderParameters;
+    class Renderer;
 }
 
 class PaddleGeometry;
@@ -20,7 +21,7 @@ class Paddle
 public:
     Paddle();
 
-    void Init(PaddleGeometry* geometry, Rocket::Material* material);
+    void Init(PaddleGeometry* geometry, Rocket::Material* material, Rocket::Renderer* renderer);
     void Update(float dt);
     
     void SetRotation(float rotation);
@@ -31,6 +32,11 @@ public:
 
 private:
 
+    struct
+    {
+        int Model;
+    } m_properties;
+    
     float m_rotation;
 
     PaddleGeometry* m_geometry;

@@ -52,7 +52,7 @@ void PaddleController::Init(GameServices* services)
     for (int i = 0; i < NumPlayers; ++i)
     {
         Material* material = renderer->CreateMaterial(m_shader);
-        m_paddle[i].Init(&m_geometry, material);
+        m_paddle[i].Init(&m_geometry, material, renderer);
     }
 
     for (int i = 1; i < NumPlayers; ++i)
