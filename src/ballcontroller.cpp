@@ -2,6 +2,7 @@
 #include "renderer.h"
 #include "shader.h"
 #include "renderqueue.h"
+#include "material.h"
 
 using namespace Rocket;
 
@@ -48,22 +49,24 @@ BallController::BallController() :
 void BallController::Init(Renderer *renderer)
 {
     m_ballshader = CreateBallShader(renderer);
+    m_properties.Model = renderer->GetShaderPropertyID("u_model");
     
     m_ballGeometry.Init(renderer, 150, 0.1f);
     
     for (int i = 0; i < NumBalls; ++i)
     {
-        Material* material = renderer->CreateMaterial(m_ballshader);
-        
-        m_balls[i].Init(&m_ballGeometry, material, renderer);
+        m_materials[i] = renderer->CreateMaterial(m_ballshader);
     }
+    
+    m_balls[0].Position = vec2(0.25, 0.75f);
+    m_balls[0].Velocity = vec2(1.0f, 0.25f);
 }
 
 void BallController::Release(Renderer* renderer)
 {
     for (int i = 0; i < NumBalls; ++i)
     {
-        renderer->ReleaseMaterial(m_balls[i].GetMaterial());
+        renderer->ReleaseMaterial(m_materials[i]);
     }
     
     m_ballGeometry.Release(renderer);
@@ -75,7 +78,19 @@ void BallController::Update(float dt)
 {
     for (int i = 0; i < NumBalls; ++i)
     {
-        m_balls[i].Update(dt);
+        Ball& ball = m_balls[i];
+        float step = dt;
+        vec2 normal = vec2(0, 0);
+        
+        while (FindCollision(ball, step, &step, &normal))
+        {
+            ball.Position += ball.Velocity * step;
+            ball.Velocity -=  2 * vec2::Dot(ball.Velocity, normal) * normal;
+        }
+        
+        ball.Position += ball.Velocity * step;
+        
+        m_materials[i]->SetShaderMat4(m_properties.Model, mat4::Translate(vec3(ball.Position, 0.0f)));
     }
 }
 
@@ -83,6 +98,17 @@ void BallController::Draw(RenderQueue* queue)
 {
     for (int i = 0; i < NumBalls; ++i)
     {
-        queue->Draw(m_balls[i].GetDrawBinding(), m_balls[i].GetMaterial());
+        queue->Draw(m_ballGeometry.GetDrawBinding(), m_materials[i]);
     }
+}
+
+bool BallController::FindCollision(Ball& ball, float dt, float* at, vec2* normal)
+{
+    if (ball.Position.Magnitude() > 1 && vec2::Dot(ball.Velocity, ball.Position) > 0)
+    {
+        *at = 0.0f;
+        *normal = ball.Position.Normalized();
+        return true;
+    }
+    return false;
 }
