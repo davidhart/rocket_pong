@@ -42,16 +42,16 @@ void BallGeometry::Init(Renderer* renderer, int numSegments, float radius)
     
     int id = 0;
     
-    for (int i = 1; i < numSegments; ++i)
+    for (short i = 1; i < numSegments; ++i)
     {
         indices[id++] = i;
         indices[id++] = i-1;
-        indices[id++] = numSegments;
+        indices[id++] = (short)numSegments;
     }
     
     indices[id++] = 0;
-    indices[id++] = numSegments - 1;
-    indices[id++] = numSegments;
+    indices[id++] = (short)numSegments - 1;
+    indices[id++] = (short)numSegments;
     
     m_vertexbuffer = renderer->CreateBuffer(numVerts * sizeof(Ball_Vert), verts.data());
     m_indexbuffer = renderer->CreateBuffer(numIndices * sizeof(short), indices.data());

@@ -10,8 +10,8 @@ using namespace Rocket;
 
 struct Starfield_QuadVert
 {
-    Rocket::vec3 Pos_Lifetime;
-    Rocket::vec2 Uv;
+    vec3 Pos_Lifetime;
+    vec2 Uv;
 };
 
 void SetBufferUVs(Starfield_QuadVert* buffer, int count)

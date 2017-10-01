@@ -102,7 +102,7 @@ void BallController::Draw(RenderQueue* queue)
     }
 }
 
-bool BallController::FindCollision(Ball& ball, float dt, float* at, vec2* normal)
+bool BallController::FindCollision(Ball& ball, float, float* at, vec2* normal)
 {
     if (ball.Position.Magnitude() > 1 && vec2::Dot(ball.Velocity, ball.Position) > 0)
     {
